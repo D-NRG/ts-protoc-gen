@@ -213,7 +213,12 @@ export function printMessage(fileName: string, exportMap: ExportMap, messageDesc
           }
         }
         const fieldObjectName = normaliseFieldObjectName(camelCaseName);
-        toObjectType.printIndentedLn(`${fieldObjectName}${canBeUndefined ? "?" : ""}: ${fieldObjectType},`);
+        const objectCanBeUndefined =
+            canBeUndefined || field.getProto3Optional() === true;
+
+        toObjectType.printIndentedLn(
+            `${fieldObjectName}${objectCanBeUndefined ? "?" : ""}: ${fieldObjectType},`
+        );
         printer.printIndentedLn(`get${jsGetterName(withUppercase)}(): ${exportType}${canBeUndefined ? " | undefined" : ""};`);
         printer.printIndentedLn(`set${jsGetterName(withUppercase)}(value${type === MESSAGE_TYPE ? "?" : ""}: ${exportType}): void;`);
       }
